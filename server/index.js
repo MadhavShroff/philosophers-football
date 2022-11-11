@@ -10,4 +10,9 @@ app.post('/', (req, res) => {
     res.send(req.body);
 });
 
+// get route to test the server
+app.get('/', (req, res) => {
+    res.send('Hello World!');
+});
+
 app.listen(3000, () => console.log('Listening on port 3000'));

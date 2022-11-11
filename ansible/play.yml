@@ -2,5 +2,5 @@
 - hosts: webservers
   remote_user: ubuntu
   tasks:
-    - name: 
-      ping: # Just prove that Ansible can connect to the machine
+    - name: "Get Nginx version"
+      shell: nginx -v
