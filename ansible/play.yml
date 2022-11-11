@@ -2,5 +2,8 @@
 - hosts: webservers
   remote_user: ubuntu
   tasks:
-    - name: "Get Nginx version"
-      shell: nginx -v
+    - name: Run start server.sh script
+      ansible.builtin.command: /home/ubuntu/philosophers-football/server/start.sh
+      become: yes
+      args:
+        chdir: /home/ubuntu/philosophers-football
