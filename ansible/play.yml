@@ -2,8 +2,12 @@
 - hosts: webservers
   remote_user: ubuntu
   tasks:
+    - name: "Pull changes"
+      ansible.builtin.shell: git pull
+      args: 
+        chdir: /home/ubuntu/philosophers-football
     - name: Run start server.sh script
-      ansible.builtin.command: /home/ubuntu/philosophers-football/server/start.sh
-      become: yes
+      ansible.builtin.shell: /bin/bash /home/ubuntu/philosophers-football/server/start.sh
       args:
+        executable: /bin/bash
         chdir: /home/ubuntu/philosophers-football
