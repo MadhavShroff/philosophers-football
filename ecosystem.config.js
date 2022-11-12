@@ -1,7 +1,7 @@
 module.exports = {
   apps : [{
     script: 'server/index.js',
-    watch: '.',
+    watch: '/home/ubuntu/philosophers-football',
     name: 'pf-server',
     instances: 0,
     exec_mode: 'cluster',
