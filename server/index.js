@@ -6,19 +6,19 @@ const app = express();
 
 app.use(express.json());
 
-app.post('/', (req, res) => {
-    res.send(req.body);
+const port = process.env.PORT || '8080';
+revision = require('child_process').execSync('git rev-parse HEAD').toString().trim().slice(0, 7);
+
+app.listen(port, () => {
+    console.log('Listening on port : ' + port);
+    console.log(`Commit Hash: ${revision}`);
 });
 
 // get route to test the server
 app.get('/', (req, res) => {
-    res.send('Hello World!');
+    res.send('Hello World from pf-server! `Server Version : ${revision}');
 });
 
-const port = process.env.PORT || '8080';
-
-app.listen(port, () => {
-    console.log('Listening on port : ' + port);
-    revision = require('child_process').execSync('git rev-parse HEAD').toString().trim().slice(0, 7);
-    console.log(`Commit Hash: ${revision}`);
+app.post('/', (req, res) => {
+    res.send(req.body);
 });
