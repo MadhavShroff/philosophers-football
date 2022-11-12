@@ -16,7 +16,7 @@ app.listen(port, () => {
 
 // get route to test the server
 app.get('/', (req, res) => {
-    res.send('Hello World from pf-server! `Server Version : ${revision}');
+    res.send(`Hello World from pf-server! Server Version : ${revision}`);
 });
 
 app.post('/', (req, res) => {
