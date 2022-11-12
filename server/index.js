@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
 });
 
 app.listen(3000, () => {
-    console.out('Listening on port 3000')
+    console.log('Listening on port 3000')
     revision = require('child_process').execSync('git rev-parse HEAD').toString().trim().slice(0, 7);
-    console.out(`Commit Hash: ${revision}`);
+    console.log(`Commit Hash: ${revision}`);
 });
