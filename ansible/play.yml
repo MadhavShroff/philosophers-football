@@ -7,7 +7,8 @@
       args: 
         chdir: /home/ubuntu/philosophers-football
     - name: Run start server.sh script
-      ansible.builtin.shell: /bin/bash /home/ubuntu/philosophers-football/server/start.sh
+      ansible.builtin.shell: /bin/bash ./server/start.sh
+      become: yes
       args:
         executable: /bin/bash
         chdir: /home/ubuntu/philosophers-football

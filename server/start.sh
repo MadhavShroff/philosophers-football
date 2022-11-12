@@ -1,4 +1,4 @@
-homeDir="/home/ubuntu/philosophers-football";
+# hocmeDir="/home/ubuntu/philosophers-football";
 
 # git pull; npm install; npm run build;
 
