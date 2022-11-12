@@ -15,8 +15,10 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
-app.listen(3000, () => {
-    console.log('Listening on port 3000')
+const port = process.env.PORT || '8080';
+
+app.listen(port, () => {
+    console.log('Listening on port : ' + port);
     revision = require('child_process').execSync('git rev-parse HEAD').toString().trim().slice(0, 7);
     console.log(`Commit Hash: ${revision}`);
 });
