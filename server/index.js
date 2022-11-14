@@ -26,7 +26,7 @@ server.post('/', (req, res) => {
     res.send(req.body);
 });
 
-// create another app to serve the frontend
+// create another app to serve the frontend 
 
 frontend.use(express.static('frontend'));
 frontend.listen(clientPort, () => {
