@@ -72,6 +72,9 @@ function initial() {
                 if (err) console.log("error", err);
                 console.log("added 'admin' to roles collection");
             });
+        } else if (!count) {
+            console.log("Error creating/retreiving roles");
+            console.log(err);
         } else {
             console.log(count + " Roles already exist");
         }
