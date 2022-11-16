@@ -1,6 +1,3 @@
-// Express.js server to echo back the request body
-// tested with curl -X POST -d "hello world" http://localhost:3000
-
 const express = require('express');
 const server = express();
 
@@ -16,15 +13,6 @@ revision = require('child_process').execSync('git rev-parse HEAD').toString().tr
 server.listen(serverPort, () => {
     console.log('Server Listening on port : ' + serverPort);
     console.log(`Commit Hash: ${revision}`);
-});
-
-// get route to test the server
-server.get('/', (req, res) => {
-    res.send(`Hello World from pf-server! Server Version : ${revision}\n`);
-});
-
-server.post('/', (req, res) => {
-    res.send(req.body);
 });
 
 // import routes for authentication and user management
@@ -64,6 +52,7 @@ function initial() {
                 if (err) console.log("error", err);
                 console.log("added 'moderator' to roles collection");
             });
+
             new Role({
                 name: "admin"
             }).save(err => {
