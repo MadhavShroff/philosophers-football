@@ -2,7 +2,7 @@ module.exports = {
   apps : [{
     script: 'server/index.js',
     watch: '/home/ubuntu/philosophers-football',
-    ignore_watch : ["node_modules", " logs/*"],
+    ignore_watch : ["/home/ubuntu/philosophers-football/node_modules", "/home/ubuntu/philosophers-football/logs/*"],
     name: 'pf-server',
     instances: 1,
     watch: true,
