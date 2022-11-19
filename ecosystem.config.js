@@ -2,6 +2,7 @@ module.exports = {
   apps : [{
     script: 'server/index.js',
     watch: '/home/ubuntu/philosophers-football',
+    ignore_watch : ["node_modules", " logs/*"],
     name: 'pf-server',
     instances: 1,
     watch: true,
@@ -28,7 +29,7 @@ module.exports = {
       path : 'production/',
       'pre-deploy-local': '',
       'post-deploy' : 'npm install && pm2 reload ecosystem.config.js --env production',
-      'pre-setup': ''
+      'pre-setup': '',
     }
   }
 };
