@@ -2,6 +2,7 @@ const { authJwt } = require("../middleware");
 const controller = require("../controllers/user.controller");
 
 module.exports = function(app) {
+  // add these headers to all responses
   app.use(function(req, res, next) {
     res.header(
       "Access-Control-Allow-Headers",

@@ -3,7 +3,7 @@ module.exports = {
     script: 'server/index.js',
     // watch: '/home/ubuntu/philosophers-football',
     watch: true,
-    ignore_watch : ["node_modules", "logs"],
+    ignore_watch : ["node_modules", "logs", ".git"],
     name: 'pf-server',
     instances: 1,
     maxMemoryRestart: '2G',

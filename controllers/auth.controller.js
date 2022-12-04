@@ -1,53 +1,33 @@
 const config = require("../config/auth.config");
 const db = require("../models");
+const {logger} = require('../middleware/serverLogger');
 const User = db.user;
-const Role = db.role;
 
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 
 exports.signup = (req, res) => {
-    const user = new User({
+    new User({
         username: req.body.username,
         email: req.body.email,
         // bcryptjs hashes the password using a salt and returns the hash
         // The salt makes it impossible to generate the same hash from the same password
         // The salted hash is then stored in the database
         password: bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(11))
-    });
-
-    user.save((err, user) => {
-        send500(res, err);
-        if (req.body.roles) {
-            Role.find({name: { $in: req.body.roles }}, (err, roles) => {
-                send500(res, err);
-                user.roles = roles.map(role => role._id);
-                user.save(err => {
-                    if(err) send500(res, err);
-                    else res.send({ message: "User was registered successfully!" });
-                });
-            });
-        } else {
-            Role.findOne({ name: "user" }, (err, role) => {
-                send500(res, err);
-                user.roles = [role._id];
-                user.save(err => {
-                    if(err) send500(res, err);
-                    else res.send({ message: "User was registered successfully!" });
-                });
-            });
-        }
+    }).save((err, user) => {
+        if(!err) logger.info("User created: " + user.username + " : " + user.email);
+        else res.status(500).send({ message: err });
     });
 };
 
-function send500(res, err) {
+function send500ifErr(res, err) {
     if(err) res.status(500).send({ message: err });
     return;
 }
 
 exports.signin = (req, res) => {
-    User.findOne({username: req.body.username}).populate("roles", "-__v").exec((err, user) => {
-        send500(res, err);
+    User.findOne({username: req.body.username}).exec((err, user) => {
+        send500ifErr(res, err);
         if (!user) {
             return res.status(404).send({ message: "User Not found." });
         }
@@ -61,10 +41,12 @@ exports.signin = (req, res) => {
                 message: "Invalid Password!"
             });
         }
-        var token = jwt.sign({ id: user.id }, config.secret, {
-            expiresIn: 86400, // 24 hours
-            algorithm: "RS256"
-        });
+        
+        // create a cookie with the user's id
+        // the cookie will expire in 10 minutes (600000 milliseconds)
+        // sameSite: true blocks CORS requests on cookies. This will affect the workflow on API calls and mobile applications.
+        // secure requires HTTPS connections. 
+        res
 
         var authorities = [];
 

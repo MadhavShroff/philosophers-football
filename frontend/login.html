@@ -2,19 +2,87 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title>Philosopher's Football</title>
+    <title>Login - Philosopher's Football</title>
     <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/3.1.2/svg.min.js" integrity="sha512-I+rKw3hArzZIHzrkdELbKqrXfkSvw/h0lW/GgB8FThaBVz2e5ZUlSW8kY8v3q6wq37eybIwyufkEZxe4qSlGcg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap');
+      body {
+        /* font-family: 'Roboto Slab', serif; */
+        font-family: 'Source Code Pro', monospace;
+        background-color: #fff;
+        color: #000;
+      }
+      h1 {
+        text-align: center;
+        padding: 0;
+      }
+      .login-container {
+        width: 400px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        position: absolute;
+        padding: 10px;
+        background-color: #fff;
+        border: 5px solid #000;
+        border-radius: 4px;
+        z-index: 2;
+      }
+      #table-container {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        position: absolute;
+        z-index: 1;
+      }
+      input[type="text"],
+      input[type="password"] {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #000;
+        box-sizing: border-box;
+      }
+      button {
+        background-color: #000;
+        color: white;
+        padding: 14px 10px;
+        margin: 8px 0;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+      }
+      .error {
+        color: red;
+      }
+    </style>
   </head>
   <body>
-    <div id="container">
-      <h1>Philosopher's Football</h1>
-      <p>by Madhav Shroff</p>
+    <div class="login-container">
+      <h1>Login</h1>
+      <form>
+        <label for="username">Username:</label>
+        <input type="text" id="username" />
+        <br />
+        <label for="password">Password:</label>
+        <input type="password" id="password" />
+        <br />
+        <button type="submit">Login</button>
+        <div class="error">
+          <!-- Error message will be displayed here -->
+        </div>
+      </form>
+    </div>
+    <div id="table-container">
     </div>
   </body>
   <!-- import auth.js -->
   <script src="auth.js"></script>
   <!-- import game.js -->
   <script src="game.js"></script>
+  <!-- import drawTable.js -->
   <script src="drawTable.js"></script>
 </html>
