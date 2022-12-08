@@ -15,7 +15,7 @@ const server = express();
 server.use(cookieParser());
 server.use(serverLogger);
 server.use(express.json());
-server.use(express.static('frontend'));
+server.use(express.static('frontend/js'));
 server.use(express.urlencoded({ extended: true }));
 server.use(function (req, res, next) {
     res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
@@ -23,9 +23,14 @@ server.use(function (req, res, next) {
     res.header('Pragma', 'no-cache');
     next()
 });
+server.set("view engine", "ejs");
 
 server.use(session({
-    secret: ['scpm124pwe9-12112e[kzxoncp1240913(U@eg','U%7bv6ry5rv%vrU6nu6vrCY5','I&V$%C#B&oh7y7ho7t8h'],
+    secret: [
+        'scpm124pwe9-12112e[kzxoncp1240913(U@eg',
+        'U%7bv6ry5rv%vrU6nu6vrCY5',
+        'I&V$%C#B&oh7y7ho7t8h'
+    ],
     name: "apisnaegipascpom",
     cookie: {
         httpOnly: true,
@@ -34,8 +39,11 @@ server.use(session({
         maxAge: 600000 // Time is in miliseconds
     },
     store: new RedisStore({ client: redisClient ,ttl: 86400}),   
-    resave: false,
-    saveUninitialized: false
+    // using MemoryStore for now, will switch to RedisStore later
+    // store: new session.MemoryStore(),
+    resave: true,
+    saveUninitialized: true,
+    rolling: true
 }));
 
 // if the Node app is behind a proxy (like Nginx, which it is), we will have to set proxy to true.
@@ -49,7 +57,6 @@ server.listen(serverPort, () => {
 
 // import routes for authentication and user management
 require('../routes/auth.routes')(server);
-require('../routes/user.routes')(server);
 require('../routes/pages.routes')(server);
 
 // adhoc log to check if server is running
@@ -59,7 +66,7 @@ require('../routes/pages.routes')(server);
 // const dbConfig = require("../config/db.config");
 const {DB_HOST} = process.env;
 
-const db = require("../models");
+const db = require("../models/");
 const User = db.user;
 
 db.mongoose.connect(DB_HOST, {
@@ -78,9 +85,8 @@ function getUserCount() {
     User.estimatedDocumentCount((err, count) => {
         if (!err) {
             logger.info("Number of users in db: " + count);
-        } else if (!count) {
-            logger.error("Error retreiving roles");
-            logger.error(err);
+        } else {
+            logger.error("Error getting user count: " + err);
         }
     });
 }

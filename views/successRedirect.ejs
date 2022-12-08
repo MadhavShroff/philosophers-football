@@ -1,0 +1,26 @@
+<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+    <%= data.message %>
+    Redirecting to <%= data.redirectUrl || '/login' %> page in <span id="countdown">5</span> seconds.
+</div>
+
+<script>
+    let countdown = 5;
+    const countdownElement = document.getElementById('countdown');
+    const countdownInterval = setInterval(() => {
+        countdown--;
+        countdownElement.innerText = countdown;
+        if (countdown === 0) {
+            clearInterval(countdownInterval);
+        }
+    }, 1000);
+    setTimeout(() => {
+        window.location.href = data.redirectUrl || '/login';
+    }, 5000);
+</script>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap');
+      body {
+        font-family: 'Source Code Pro', monospace;
+      }
+</style>
