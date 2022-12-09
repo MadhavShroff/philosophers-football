@@ -1,7 +1,8 @@
 const express = require('express');
 const redis = require('redis');
 const session = require('express-session');
-const RedisStore = require('connect-redis')(session);
+// use mongo store for session storage
+const MongoStore = require('connect-mongo');
 const redisClient = redis.createClient();
 const {serverLogger, logger} = require('../middleware/serverLogger');
 const cookieParser = require('cookie-parser')
@@ -34,15 +35,19 @@ server.use(session({
     name: "apisnaegipascpom",
     cookie: {
         httpOnly: true,
-        secure: true,
+        secure: process.env.PF_ENV === "production" ? true : false,
         sameSite: true,
-        maxAge: 600000 // Time is in miliseconds
+        maxAge: 600000 
     },
-    store: new RedisStore({ client: redisClient ,ttl: 86400}),   
-    // using MemoryStore for now, will switch to RedisStore later
-    // store: new session.MemoryStore(),
-    resave: true,
-    saveUninitialized: true,
+    store: MongoStore.create({
+        mongoUrl: process.env.DB_HOST,
+        ttl: 600000,
+        collection: "userSessions",
+        autoRemove: 'native', // Default
+        expires: 1000 * 60 * 10 // 10 minutes
+    }),
+    saveUninitialized: false,
+    resave: false,
     rolling: true
 }));
 

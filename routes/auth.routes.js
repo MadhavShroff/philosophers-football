@@ -2,7 +2,7 @@ var bcrypt = require("bcryptjs");
 const db = require("../models");
 const User = db.user;
 const sanitize = require('mongo-sanitize');
-const { checkDuplicateUsernameOrEmail, checkSessionAndCredentials, logout } = require("../middleware/auth");
+const { checkDuplicateUsernameOrEmail, credentialsAreValid, sessionIsValid, logout } = require("../middleware/auth");
 const { logger } = require("../middleware/serverLogger");
 
 module.exports = function (app) {
@@ -23,7 +23,6 @@ module.exports = function (app) {
 			res.status(400).send({ message: "Empty body in request" });
 		}
 		req.body = sanitize(req.body);
-		console.log(req.body);
 		next();
 	})
 
@@ -36,15 +35,21 @@ module.exports = function (app) {
 			// The salt makes it impossible to generate the same hash from the same password
 			// The salted hash is then stored in the database
 		}).save((err, user) => {
-			if (err)res.status(500).send({ message: err }); 
+			if (err) res.status(500).send({ message: err }); 
 			logger.info("User created: " + user.username + " : " + user.email);
 			res.status(200).render('successRedirect', {data: { message: "User Registered Syccessfully.", redirectUrl: "/login"}});
 		});
 	});
 
-	app.post("/api/auth/login", checkSessionAndCredentials, (req, res) => {
+	app.post("/api/auth/login", credentialsAreValid, (req, res) => {
 		logger.info("User logged in: " + req.session.user.username + "; sid: " + req.sessionID);
-		res.status(200).render('successRedirect', {data: { message: "Logged In Successfully.", redirectUrl: "/lobby"}});
+		res.cookie("pfcookie", req.sessionID, {
+			maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+			httpOnly: true,
+			sameSite: "strict",
+			secure: true
+		}).json({success: true, message: "Login Successful. Cookie set."});
+		// res.status(200).render('successRedirect', {data: { message: "Login Successful.", redirectUrl: "/login"}});
 		// Redirect to lobby
 	});
 

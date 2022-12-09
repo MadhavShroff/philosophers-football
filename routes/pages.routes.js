@@ -1,16 +1,12 @@
 const path = require('path');
-const { checkSessionAndCredentials } = require('../middleware/auth');
+const { credentialsAreValid, sessionIsValid } = require('../middleware/auth');
+const { logger } = require('../middleware/serverLogger');
 
 module.exports = function(app) {
     // add routes to send static files in response to get requests
-    app.get('/', (req, res) => {
-        res.redirect('/login');
-    });
-    app.get('/game', checkSessionAndCredentials, (req, res) => {
-        res.sendFile(path.resolve('..', '/frontend/game.html'));
-    });
-    app.get('/game.html', checkSessionAndCredentials, (req, res) => {
-        res.sendFile(path.join(__dirname, '../frontend/game.html'), {root: path.join(__dirname, '../frontend')});
+    app.get('/', sessionIsValid, (req, res) => {
+        // Log user details to console
+        res.redirect('/lobby');
     });
     app.get('/login', (req, res) => {
         res.sendFile('login.html', {root: path.join(__dirname, '../frontend')});
@@ -18,14 +14,16 @@ module.exports = function(app) {
     app.get('/signup', (req, res) => {
         res.sendFile('signup.html', {root: path.join(__dirname, '../frontend')});
     });
-    app.get('/lobby', checkSessionAndCredentials, (req, res) => {
+    app.get('/lobby', sessionIsValid, (req, res) => {
+        logger.info("User " + req.session.user.username + " visited the lobby");
         res.render('lobby', {data: {user: req.session.user}});
     });
 
-    app.get('/profile', checkSessionAndCredentials, (req, res) => {
-        res.sendFile(path.join(__dirname, '../frontend/profile.html'), {root: path.join(__dirname, '../frontend')});
+    app.get('/game/:id', sessionIsValid, (req, res) => {
+        req.session.user.visitedGame = req.session.user.visitedGame == undefined ? 1 : req.session.user.visitedGame + 1;
+        res.render('game', {data: {user: req.session.user}});
     });
-    app.get('/leaderboard', (req, res) => {
-        res.sendFile(path.join(__dirname, '../frontend/leaderboard.html'), {root: path.join(__dirname, '../frontend')});
+    app.get('/game.html', sessionIsValid, (req, res) => {
+        res.sendFile(path.join(__dirname, '../frontend/game.html'), {root: path.join(__dirname, '../frontend')});
     });
 };

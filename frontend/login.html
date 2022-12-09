@@ -107,9 +107,16 @@
           password
         })
       }).then(response => response.json()).then(data => {
-        // do something with the response data
+        console.log('Success:', data);
+        if (data.success) {
+          // redirect to home page
+          window.location.href = '/lobby';
+        } else {
+          // display error message
+          document.querySelector('.error').innerHTML = data.message;
+        }
       }).catch(error => {
-        // handle any errors
+        console.error('Error:', error);
       });
       return false;
     }
