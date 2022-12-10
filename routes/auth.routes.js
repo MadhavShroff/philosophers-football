@@ -46,6 +46,7 @@ module.exports = function (app) {
 		res.json({success: true, message: "Login Successful. Cookie set."});
 		// res.status(200).render('successRedirect', {data: { message: "Login Successful.", redirectUrl: "/login"}});
 		// Redirect to lobby
+		
 	});
 
 	app.get("/api/auth/logout", (req, res) => {

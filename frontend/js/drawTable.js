@@ -116,4 +116,3 @@ class Vector {
 	scale(scalar) {return new Vector(this.x * scalar, this.y * scalar)}
 	add(other) {return new Vector(this.x + other.x, this.y + other.y)}
 }
-

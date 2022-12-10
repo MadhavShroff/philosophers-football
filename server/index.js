@@ -35,10 +35,11 @@ server.use(session({
     ],
     name: "pfsession",
     cookie: {
-        secure: process.env.PF_ENV === "production" ? true : false,
-        sameSite: "none",
-        maxAge: 600000,
         httpOnly: true,
+        secure: process.env.PF_ENV === "production" ? true : false,
+        sameSite: true,
+        domain: process.env.PF_ENV === "production" ? "philosophers-football.com" : "localhost",
+        maxAge: 600000,
     },
     store: MongoStore.create({
         mongoUrl: process.env.DB_HOST,

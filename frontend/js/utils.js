@@ -18,6 +18,6 @@ const makeFetch = (url, body, method, callback) => {
 }
 
 const getLegalJumps = (board, ballPosition) => {
-    
+    // returns an array of legal jumps
 }
 
