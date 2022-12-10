@@ -27,6 +27,8 @@ server.use(function (req, res, next) {
 });
 server.set("view engine", "ejs");
 
+// if the Node app is behind a proxy (like Nginx, which it is), we will have to set proxy to true.
+server.enable('trust proxy')
 server.use(session({
     secret: [
         'scpm124pwe9-12112e[kzxoncp1240913(U@eg',
@@ -34,10 +36,9 @@ server.use(session({
         'I&V$%C#B&oh7y7ho7t8h'
     ],
     name: "pfsession",
+    proxy: process.env.PF_ENV === "production" ? true : false,
     cookie: {
-        httpOnly: true,
         secure: process.env.PF_ENV === "production" ? true : false,
-        sameSite: true,
         maxAge: 600000,
     },
     store: MongoStore.create({
@@ -50,11 +51,8 @@ server.use(session({
     saveUninitialized: false,
     rolling: true,
     resave: false,
-    proxy: process.env.PF_ENV === "production" ? true : false,
 }));
 
-// if the Node app is behind a proxy (like Nginx, which it is), we will have to set proxy to true.
-server.set('trust proxy', 1)
 
 const serverPort = process.env.CLIENT_PORT|| 3000;
 server.listen(serverPort, () => {

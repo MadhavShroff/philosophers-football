@@ -47,6 +47,9 @@ module.exports = function(app) {
             res.json({success: false, message: "You cannot play against yourself"});
             return;
         }
+        if (req.body.opponent.charAt(0) == '@') {
+            req.body.opponent = req.body.opponent.substring(1);
+        }
         User.findOne({username: req.body.opponent}, (err, user) => {
             if (err) {
                 console.log(err);
@@ -73,7 +76,7 @@ module.exports = function(app) {
                         turn: req.session.user.username,
                         gameStatus: "inProgress",
                         winner: null,
-                        gameId: counter.seq
+                        gameId: counter.seq,
                     }).then((game) => {
                         res.json({success: true, gameId: game.gameId});
                     }).catch((err) => {

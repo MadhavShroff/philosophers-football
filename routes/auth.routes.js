@@ -30,7 +30,8 @@ module.exports = function (app) {
 		new User({
 			username: req.body.username,
 			email: req.body.email,
-			password: bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(11))
+			password: bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(11)),
+			score: 0
 			// bcryptjs hashes the password using a salt and returns the hash
 			// The salt makes it impossible to generate the same hash from the same password
 			// The salted hash is then stored in the database
