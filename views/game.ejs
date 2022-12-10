@@ -2,19 +2,131 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title>Philosopher's Football</title>
+    <meta name="viewport" content="width=device-width, initial-scale=0.3, minimum-scale=0.55">
+    <title>Game #<%= gameData.gameId %> - Philosopher's Football</title>
     <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/3.1.2/svg.min.js" integrity="sha512-I+rKw3hArzZIHzrkdELbKqrXfkSvw/h0lW/GgB8FThaBVz2e5ZUlSW8kY8v3q6wq37eybIwyufkEZxe4qSlGcg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap');
+      body {
+        /* font-family: 'Roboto Slab', serif; */
+        font-family: 'Source Code Pro', monospace;
+        background-color: #fff;
+        color: #000;
+      }
+      h1 {
+        text-align: center;
+        padding: 0;
+      }
+      .login-container {
+        width: 400px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        position: absolute;
+        padding: 10px;
+        background-color: #fff;
+        border: 5px solid #000;
+        border-radius: 4px;
+        z-index: 2;
+      }
+      #table-container > div#table {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        position: absolute;
+        z-index: 1;
+        order: 1;
+      }
+      #table-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      #table-container > h2 {
+        order: 2;
+      }
+      #table-container > ol {
+        order: 3;
+      }
+      input[type="text"],
+      input[type="password"] {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #000;
+        box-sizing: border-box;
+      }
+      button {
+        background-color: #000;
+        color: white;
+        padding: 14px 10px;
+        margin: 8px 0;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+      }
+      .list-group {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        width: 700px;
+      }
+      .error {
+        color: red;
+      }
+    </style>
   </head>
   <body>
     <div id="table-container">
-      <h1>The Game</h1>
-      <p>by Madhav Shroff</p>
+      <div>
+        <h1> Game # <%= gameData.gameId %> </h1>
+      </div>
+      <div>
+        <div>Player 1: <%= gameData.player1Username %> </div>
+        <div>Player 2: <%= gameData.player2Username %> </div>
+      </div>
+      <div>
+        <h3> Turn: <%= gameData.turn %> </h3>
+      </div>
+      <div id="table"></div>
+      <h2>Rules</h2>
+        <ol class="list-group" type="I">
+          <li class="list-group-item">The Phutball Board represents a football field. One white stone starts off in the middle. This represents the ball. The objective of the game is to move the ball into your opponent's goal line. The goal line is the topmost or bottommost row of the board colored red and green.</li>
+          <br/>
+          <li class="list-group-item">
+            In each turn the player has a choice of either placing a black stone on the board, resembling a player on the field; or Jumping the ball, which is represented by the white stone.
+          </li>
+          <ol>
+            <li>Jumps can be Diagonal</li>
+            <li>Jumps can be Chained</li>
+            <li>Any number of players may be jumped at once. </li>
+            <li>The players are removed after being jumped. (like checkers)</li>
+            <li>When a player is jumped, it is removed immediatelsy. It cannot be jumped again in the same move.</li>
+          </ol>
+          <br/>
+          <li>
+            You cannot pass your turn. You must place a stone or jump the ball.
+          </li>
+          <br/>
+          <li>
+            The game ends when one player has moved the ball into the opponent's goal line.
+          </li>
+        </ol>
     </div>
   </body>
   <!-- import auth.js -->
   <!-- <script src="auth.js"></script> -->
   <!-- import game.js -->
   <!-- <script src="game.js"></script> -->
-  <script src="https://philosophers-football.com/frontend/js/drawTable.js"></script>
+  <!-- import drawTable.js -->
+  <script src="/drawTable.js"></script>
+  <script>
+    SVG.on(document, 'DOMContentLoaded', function() {
+      clearBoard();
+      addBall( <%= gameData.ballPosition.x %>, <%= gameData.ballPosition.y %> );
+    });
+  </script>
 </html>

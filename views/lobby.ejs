@@ -3,144 +3,95 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"> -->
+  <link rel="stylesheet" href="/lobby.css">
+  <script src="/utils.js"></script>
+  <script src="/gameLogic.js"></script>
   <title>Lobby</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap');
-    body {
-      font-family: 'Source Code Pro', monospace;
-      margin: 0;
-      padding: 0;
-    }
-
-    .container {
-      width: 80%;
-      margin: 0 auto;
-    }
-
-    h1, h2 {
-      text-align: center;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      padding: 10px;
-      border: 1px solid #ccc;
-    }
-
-    .my-games ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-
-    .my-games li {
-      background-color: #333;
-      color: #fff;
-      padding: 10px;
-      margin-bottom: 10px;
-    }
-
-    .profile-metadata {
-      display: flex;
-    }
-
-    .profile-metadata img {
-      width: 50%;
-    }
-
-    .profile-metadata .metadata {
-      width: 50%;
-      padding: 20px;
-    }
-
-    .profile-metadata .metadata h4 {
-      margin: 0;
-      padding: 0;
-    }
-
-    .rules ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-
-    .rules li {
-      background-color: #ccc;
-      padding: 10px;
-      margin-bottom: 10px;
-    }
-  </style>
-  </style>
 </head>
 <body>
     <div class="container">
-      <h1>Lobby</h1>
-  
-      <h2>Leaderboard</h2>
+      <h1 style="text-align: center;">Welcome to the Lobby</h1>
+      <!-- 2 wide width rectangular buttons for "Create Game + " and "Logout"  -->
+      <div class="btn-container">
+        <button type="button" onclick="createGameRoom()">Create Game</button>
+        <button type="button" onclick="logout()">Logout</button>
+      </div>
+      <h2>My Profile Metadata</h2>
+      <div id="profile-metadata">
+        <div>
+          <div class="metadata">
+            <h1> <%= "@" + data.user.username %>  </h1>
+            <div> <%= data.user.email %>  </div>
+          </div>
+          <div class="frame">
+            <span class="helper"></span>
+            <img id="dp" src= <%= "https://source.boringavatars.com/marble/100/" + "@" + data.user.username + "?colors=EF233C,FED4E7,313638,003E1F" %> alt="Profile Picture">
+          </div>
+        </div>
+        <div id="uuid"> <%= "#" + data.user.id %>  </div>
+      </div>
+      <h2>My Games</h2>
+      <div class="game-group">
+        <% for(var i=0; i < data.games.length; i++) { %>
+          <div class="game">
+            <div class="game-id"><%= data.games[i].gameId %></div>
+            <div class="players">
+              <figure class="player">
+                <img src= <%= "https://source.boringavatars.com/marble/100/" + data.games[i].player1Username + "?colors=EF233C,FED4E7,313638,003E1F" %> alt="Profile Picture">
+                <figcaption><%= data.games[i].player1Username %></figcaption>
+              </figure>
+              <div><span class="helper"></span>vs.</div>
+              <figure class="player">
+                <img src= <%= "https://source.boringavatars.com/marble/100/" + data.games[i].player2Username + "?colors=EF233C,FED4E7,313638,003E1F" %> alt="Profile Picture">
+                <figcaption><%= data.games[i].player2Username %></figcaption>
+              </figure>
+            </div>
+          </div>
+        <% } %>
+      </div>
+      
+      <h2>Philosophers Active : </h2>
       <table>
         <thead>
           <tr>
-            <th>#</th>
             <th>Username</th>
             <th>Score</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>Player1</td>
-            <td>100</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>Player2</td>
-            <td>90</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>Player3</td>
-            <td>80</td>
-          </tr>
+          <% for(var i=0; i < data.users.length; i++) { %>
+            <tr>
+              <td><%= data.users[i].username %></td>
+              <td><%= data.users[i].score %></td>
+            </tr>
+          <% } %>
         </tbody>
       </table>
-  
-      <h2>My Games</h2>
-      <div class="my-games">
-        <ul>
-          <li>Game 1</li>
-          <li>Game 2</li>
-          <li>Game 3</li>
-        </ul>
-      </div>
-  
-      <h2>Profile Metadata</h2>
-      <div class="profile-metadata">
-        <img src= <%= "https://source.boringavatars.com/marble/100/" + data.username + "?colors=264653,2a9d8f,e9c46a,f4a261,e76f51" %> alt="Profile Picture">
-        <div class="metadata">
-          <h4> <%= data.username %>  </h4>
-          <p>Score: 100</p>
-        </div>
-        <h2>My Games</h2>
-        <ul class="list-group">
-          <li class="list-group-item active">Game 1</li>
-          <li class="list-group-item">Game 2</li>
-          <li class="list-group-item">Game 3</li>
-        </ul>
-      </div>
+      <h2>Rules</h2>
+      <ol class="list-group" type="I">
+        <li class="list-group-item">The Phutball Board represents a football field. One white stone starts off in the middle. This represents the ball. The objective of the game is to move the ball into your opponent's goal line. The goal line is the topmost or bottommost row of the board. (1st, 20th)</li>
+        <br/>
+        <li class="list-group-item">
+          In each turn the player has a choice of either placing a black stone on the board, resembling a player on the field; or Jumping the ball, which is represented by the white stone.
+        </li>
+        <ol>
+          <li>Jumps can be Diagonal</li>
+          <li>Jumps can be Chained</li>
+          <li>Any number of players may be jumped at once. </li>
+          <li>The players are removed after being jumped. (like checkers)</li>
+          <li>When a player is jumped, it is removed immediately. It cannot be jumped again in the same move.</li>
+        </ol>
+        <br/>
+        <li>
+          You cannot pass your turn. You must place a stone or jump the ball.
+        </li>
+        <br/>
+        <li>
+          The game ends when one player has moved the ball into the opponent's goal line.
+        </li>
+      </ol>
     </div>
-
-    <h2>Rules</h2>
-    <ul class="list-group">
-      <li class="list-group-item">Rule 1</li>
-      <li class="list-group-item">Rule 2</li>
-      <li class="list-group-item">Rule 3</li>
-      <li class="list-group-item">Rule 4</li>
-    </ul>
   </div>
 </body>
 </html>

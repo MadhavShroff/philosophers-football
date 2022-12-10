@@ -1,6 +1,8 @@
 const path = require('path');
 const { credentialsAreValid, sessionIsValid } = require('../middleware/auth');
 const { logger } = require('../middleware/serverLogger');
+const Game = require('../models/game.model');
+const User = require('../models/user.model');
 
 module.exports = function(app) {
     // add routes to send static files in response to get requests
@@ -9,21 +11,58 @@ module.exports = function(app) {
         res.redirect('/lobby');
     });
     app.get('/login', (req, res) => {
-        res.sendFile('login.html', {root: path.join(__dirname, '../frontend')});
+        logger.info("csrfToken: " + req.session.csrfSecret);
+        res.render('login', {data: {user: req.session.user, csrfToken: req.session.csrfSecret}});
     });
     app.get('/signup', (req, res) => {
-        res.sendFile('signup.html', {root: path.join(__dirname, '../frontend')});
+        logger.info("csrfToken: " + req.session.csrfSecret);
+        res.render('signup', {data: {user: req.session.user, csrfToken: req.session.csrfSecret}});
     });
     app.get('/lobby', sessionIsValid, (req, res) => {
         logger.info("User " + req.session.user.username + " visited the lobby");
-        res.render('lobby', {data: {user: req.session.user}});
-    });
-
-    app.get('/game/:id', sessionIsValid, (req, res) => {
-        req.session.user.visitedGame = req.session.user.visitedGame == undefined ? 1 : req.session.user.visitedGame + 1;
-        res.render('game', {data: {user: req.session.user}});
-    });
-    app.get('/game.html', sessionIsValid, (req, res) => {
-        res.sendFile(path.join(__dirname, '../frontend/game.html'), {root: path.join(__dirname, '../frontend')});
+        Game.find({$or: [{player1: req.session.user.id}, {player2: req.session.user.id}]}, (err, games) => {
+            if (err) {
+                console.log(err);
+                res.json({success: false, message: "An error occurred"});
+            }
+            if (games == null) {
+                res.json({success: false, message: "An error occurred"});
+            } else {
+                // get list of all usernames
+                User.find({}, (err, users) => {
+                    if (err) {
+                        console.log(err);
+                        res.json({success: false, message: "An error occurred"});
+                    }
+                    if (users == null) {
+                        res.json({success: false, message: "An error occurred"});
+                    } else {
+                        res.render('lobby', 
+                        {   
+                            data: {
+                            user: req.session.user, 
+                            games: games.map((game) => {
+                                return {
+                                    gameId: game.gameId,
+                                    player1Username: "@" + game.player1Username,
+                                    player2Username: "@" + game.player2Username,
+                                    blackTokens: game.blackTokens,
+                                    ballPosition: game.ballPosition,
+                                    turn: "@" + game.turn,
+                                    gameStatus: game.gameStatus,
+                                    winner: game.winner
+                                }
+                            }),
+                            users: users.map((user) => {
+                                return {
+                                    username: "@" + user.username,
+                                    score: user.score
+                                }
+                            })
+                        }});
+                    }
+                });
+            }
+        });
     });
 };

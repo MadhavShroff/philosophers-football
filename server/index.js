@@ -11,12 +11,13 @@ require("dotenv").config();
 
 // Create a new Server
 const server = express();
-
 // Initialize Middleware
 server.use(cookieParser());
 server.use(serverLogger);
 server.use(express.json());
 server.use(express.static('frontend/js'));
+server.use(express.static('frontend/css'));
+server.use(express.static('frontend/static'));
 server.use(express.urlencoded({ extended: true }));
 server.use(function (req, res, next) {
     res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
@@ -32,7 +33,7 @@ server.use(session({
         'U%7bv6ry5rv%vrU6nu6vrCY5',
         'I&V$%C#B&oh7y7ho7t8h'
     ],
-    name: "apisnaegipascpom",
+    name: "pfsession",
     cookie: {
         httpOnly: true,
         secure: process.env.PF_ENV === "production" ? true : false,
@@ -46,8 +47,8 @@ server.use(session({
         autoRemove: 'native', // Default
         expires: 1000 * 60 * 10 // 10 minutes
     }),
-    saveUninitialized: false,
-    resave: false,
+    saveUninitialized: true,
+    resave: true,
     rolling: true
 }));
 
@@ -63,6 +64,7 @@ server.listen(serverPort, () => {
 // import routes for authentication and user management
 require('../routes/auth.routes')(server);
 require('../routes/pages.routes')(server);
+require('../routes/game.routes')(server);
 
 // adhoc log to check if server is running
 // log that server is running using winston

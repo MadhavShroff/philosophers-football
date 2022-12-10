@@ -1,6 +1,8 @@
 const bcrypt = require('bcryptjs');
 const { logger } = require('../middleware/serverLogger');
 const db = require("../models");
+const csrf = require('csurf');
+const Game = require('../models/game.model');
 const User = db.user;
 
 // middleware reads req body and checks if credentials are valid
@@ -36,7 +38,6 @@ const sessionIsValid = (req, res, next) => {
     }
 }
 
-
 const checkDuplicateUsernameOrEmail = (req, res, next) => {
     // Username
     User.findOne({
@@ -67,8 +68,30 @@ const checkDuplicateUsernameOrEmail = (req, res, next) => {
     })
 }
 
+const userInGame = (req, res, next) => {
+    // check if the user is one of the players in the game (req.params.id)
+    // first find the game from the database, then check if req.session.user.id is player1 or player2
+    // if yes, allow user through
+
+    Game.findOne({gameId: req.params.id}, (err, game) => {
+        if (err) {
+            console.log(err);
+            res.status(400).json({success: false, message: "An error occurred"});
+        }
+        if (game == null) {
+            res.status(400).json({success: false, message: "An error occurred"});
+        
+        } else if (game.player1 == req.session.user.id || game.player2 == req.session.user.id) {
+            next();
+        } else {
+            res.status(403).json({success: false, message: "You are not a player in this game. Access denied."});
+        }
+    });
+}
+
 module.exports = {
     credentialsAreValid,
     sessionIsValid,
-    checkDuplicateUsernameOrEmail
+    checkDuplicateUsernameOrEmail,
+    userInGame
 }

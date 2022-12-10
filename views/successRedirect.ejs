@@ -14,8 +14,8 @@
         }
     }, 1000);
     setTimeout(() => {
-        window.location.href = data.redirectUrl || '/login';
-    }, 5000);
+        window.location.href = "<%= data.redirectUrl %>";
+    }, 5000); 
 </script>
 
 <style>

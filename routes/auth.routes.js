@@ -2,7 +2,7 @@ var bcrypt = require("bcryptjs");
 const db = require("../models");
 const User = db.user;
 const sanitize = require('mongo-sanitize');
-const { checkDuplicateUsernameOrEmail, credentialsAreValid, sessionIsValid, logout } = require("../middleware/auth");
+const { checkDuplicateUsernameOrEmail, credentialsAreValid, sessionIsValid} = require("../middleware/auth");
 const { logger } = require("../middleware/serverLogger");
 
 module.exports = function (app) {
@@ -43,19 +43,14 @@ module.exports = function (app) {
 
 	app.post("/api/auth/login", credentialsAreValid, (req, res) => {
 		logger.info("User logged in: " + req.session.user.username + "; sid: " + req.sessionID);
-		res.cookie("pfcookie", req.sessionID, {
-			maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
-			httpOnly: true,
-			sameSite: "strict",
-			secure: true
-		}).json({success: true, message: "Login Successful. Cookie set."});
+		res.json({success: true, message: "Login Successful. Cookie set."});
 		// res.status(200).render('successRedirect', {data: { message: "Login Successful.", redirectUrl: "/login"}});
 		// Redirect to lobby
 	});
 
-	app.post("/api/auth/logout", (req, res) => {
+	app.get("/api/auth/logout", (req, res) => {
 		logger.info("User logged out: " + req.session.user.username);
 		req.session.destroy();
-		res.redirect('/login.html');
+		res.json({success: true, message: "Login Successful. Cookie set."});
 	});
 };
