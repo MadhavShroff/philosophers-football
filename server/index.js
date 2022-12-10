@@ -35,7 +35,6 @@ server.use(session({
     ],
     name: "pfsession",
     cookie: {
-        httpOnly: true,
         secure: process.env.PF_ENV === "production" ? true : false,
         sameSite: true,
         maxAge: 600000 

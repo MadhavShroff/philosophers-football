@@ -112,7 +112,7 @@
         console.log('Success:', data);
         if (data.success) {
           // redirect to home page
-          window.location.href = '/lobby';
+          window.location = '/lobby';
         } else {
           // display error message
           document.querySelector('.error').innerHTML = data.message;
