@@ -36,8 +36,9 @@ server.use(session({
     name: "pfsession",
     cookie: {
         secure: process.env.PF_ENV === "production" ? true : false,
-        sameSite: true,
-        maxAge: 600000 
+        sameSite: "none",
+        maxAge: 600000,
+        httpOnly: true,
     },
     store: MongoStore.create({
         mongoUrl: process.env.DB_HOST,
@@ -47,8 +48,7 @@ server.use(session({
         expires: 1000 * 60 * 10 // 10 minutes
     }),
     saveUninitialized: true,
-    resave: true,
-    rolling: true
+    rolling: true,
 }));
 
 // if the Node app is behind a proxy (like Nginx, which it is), we will have to set proxy to true.
