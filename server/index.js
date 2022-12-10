@@ -48,7 +48,7 @@ server.use(session({
         autoRemove: 'native', // Default
         expires: 1000 * 60 * 10 // 10 minutes
     }),
-    saveUninitialized: true,
+    saveUninitialized: false,
     rolling: true,
 }));
 
