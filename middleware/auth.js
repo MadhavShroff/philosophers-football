@@ -21,6 +21,7 @@ const credentialsAreValid = (req, res, next) => {
                 username: user.username,
                 email: user.email
             }
+            req.session.save();
             next(); // if the password is correct, create a new session and allow user through
         } else { 
             logger.error("Invalid password for user: " + user.username);

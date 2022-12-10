@@ -38,7 +38,6 @@ server.use(session({
         httpOnly: true,
         secure: process.env.PF_ENV === "production" ? true : false,
         sameSite: true,
-        domain: process.env.PF_ENV === "production" ? "philosophers-football.com" : "localhost",
         maxAge: 600000,
     },
     store: MongoStore.create({
@@ -50,6 +49,7 @@ server.use(session({
     }),
     saveUninitialized: false,
     rolling: true,
+    resave: false,
 }));
 
 // if the Node app is behind a proxy (like Nginx, which it is), we will have to set proxy to true.
