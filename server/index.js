@@ -50,6 +50,7 @@ server.use(session({
     saveUninitialized: false,
     rolling: true,
     resave: false,
+    proxy: process.env.PF_ENV === "production" ? true : false,
 }));
 
 // if the Node app is behind a proxy (like Nginx, which it is), we will have to set proxy to true.
