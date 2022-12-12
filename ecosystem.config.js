@@ -5,7 +5,7 @@ module.exports = {
     watch: true,
     ignore_watch : ["node_modules", "logs", ".git"],
     name: 'pf-server',
-    instances: 1,
+    instances: 3,
     maxMemoryRestart: '2G',
     max_restarts: 20000,
     env: {
@@ -23,7 +23,6 @@ module.exports = {
   deploy : {
     production : {
       user : 'ubuntu',
-      host : '44.204.59.3',
       ref  : 'origin/master',
       repo : 'git+https://github.com/MadhavShroff/philosophers-football.git',
       path : 'production/',
