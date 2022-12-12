@@ -43,6 +43,7 @@ const createGrid = () => {
 
 const onClick = (x, y) => {
     console.log("Clicked on " + x + ", " + y);
+    handleClick(x, y);
 }
 
 const createIntersections = () => {
@@ -97,6 +98,18 @@ function drawArrow(x1, y1, x2, y2) {
     arrows.line(source.x, source.y, target.x, target.y).stroke({ width: 2, color: 'red' }).marker('end', 10, 10, function(add) {
         add.path('M 0 0 L 10 5 L 0 10 z').fill('red')
     })
+}
+
+function drawArrowLineOnly(x1, y1, x2, y2) {
+	var source = {x: gridSize*x1, y: gridSize*y1}
+    var target = {x: gridSize*x2, y: gridSize*y2}
+
+    const delta = Vector.fromPoints(source, target)
+
+    source = delta.unitVector.add(source)
+    target = delta.unitVector.add(target)
+
+    arrows.line(source.x, source.y, target.x, target.y).stroke({ width: 2, color: 'red' })
 }
 
 class Vector {

@@ -45,9 +45,6 @@ module.exports = function(app) {
                                     gameId: game.gameId,
                                     player1Username: "@" + game.player1Username,
                                     player2Username: "@" + game.player2Username,
-                                    blackTokens: game.blackTokens,
-                                    ballPosition: game.ballPosition,
-                                    turn: "@" + game.turn,
                                     gameStatus: game.gameStatus,
                                     winner: game.winner
                                 }

@@ -74,7 +74,11 @@ const userInGame = (req, res, next) => {
     // first find the game from the database, then check if req.session.user.id is player1 or player2
     // if yes, allow user through
 
-    Game.findOne({gameId: req.params.id}, (err, game) => {
+    // get gameID from body or params, whichever is not null or undefined
+    const ID = req.params.id || req.body.gameId;
+
+
+    Game.findOne({$or: [{gameId: ID}, {gameId: ID}]}, (err, game) => {
         if (err) {
             console.log(err);
             res.status(400).json({success: false, message: "An error occurred"});
@@ -85,6 +89,7 @@ const userInGame = (req, res, next) => {
         } else if (game.player1 == req.session.user.id || game.player2 == req.session.user.id) {
             next();
         } else {
+            logger.error("User " + req.session.user.username + " tried to access game " + ID+ " but is not a player in this game.");
             res.status(403).json({success: false, message: "You are not a player in this game. Access denied."});
         }
     });

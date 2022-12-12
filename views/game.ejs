@@ -44,11 +44,14 @@
         flex-direction: column;
         align-items: center;
       }
-      #table-container > h2 {
+      #table-container > button {
         order: 2;
       }
-      #table-container > ol {
+      #table-container > h2 {
         order: 3;
+      }
+      #table-container > ol {
+        order: 4;
       }
       input[type="text"],
       input[type="password"] {
@@ -62,11 +65,12 @@
       button {
         background-color: #000;
         color: white;
-        padding: 14px 10px;
-        margin: 8px 0;
+        padding: 5px 8px;
         border: none;
         cursor: pointer;
-        width: 100%;
+        width: fit-content;
+        height: fit-content;
+        font-size: 1em;
       }
       .list-group {
         list-style-type: none;
@@ -88,16 +92,22 @@
         <div>Player 1: <%= gameData.player1Username %> </div>
         <div>Player 2: <%= gameData.player2Username %> </div>
       </div>
-      <div>
-        <h3> Turn: <%= gameData.turn %> </h3>
+      <div style="text-align: center;">
+        <% if (gameData.gameStatus === "over") { %>
+          <h2> Game Over </h3>
+          <h2> Winner: <%= gameData.winner %> </h3>
+        <% } else { %>
+          <h3> Turn: <%= gameData.turn %> <%= gameData.player1Username === gameData.turn ? `(Goal: Green)` : `(Goal: Red)` %> </h3>
+        <% } %> 
       </div>
       <div id="table"></div>
+      <button onclick="arrows.clear(); clickedJump = false;">Hide Arrows</button>
       <h2>Rules</h2>
         <ol class="list-group" type="I">
           <li class="list-group-item">The Phutball Board represents a football field. One white stone starts off in the middle. This represents the ball. The objective of the game is to move the ball into your opponent's goal line. The goal line is the topmost or bottommost row of the board colored red and green.</li>
           <br/>
           <li class="list-group-item">
-            In each turn the player has a choice of either placing a black stone on the board, resembling a player on the field; or Jumping the ball, which is represented by the white stone.
+            In each turn the player has a choice of either placing a black stone on the board, resembling a player on the field; or Jumping the ball, which is represented by the white stone. Click on the ball to show the possible jumps indicated with red arrows. 
           </li>
           <ol>
             <li>Jumps can be Diagonal</li>
@@ -122,11 +132,85 @@
   <!-- import game.js -->
   <!-- <script src="game.js"></script> -->
   <!-- import drawTable.js -->
+  <script src="/utils.js"></script>
   <script src="/drawTable.js"></script>
+  <script src="/gameRoomActions.js"></script>
   <script>
+    /*{
+      userData: {
+        user: {
+          id: user.id, // ID is used to find the user in the database
+          username: user.username,
+          email: user.email,
+          lastVisitedGame : {
+            id: req.params.id,
+            time: Date.now()
+        };
+        }
+      },
+      gameData: {
+        gameId: game.gameId,
+        player1Username: "@" + game.player1Username,
+        player2Username: "@" + game.player2Username,
+        blackTokens: game.blackTokens,
+        ballPosition: game.ballPosition,
+        possibleJumps: game.possibleJumps,
+        turn: "@" + game.turn,
+        gameStatus: game.gameStatus,
+        winner: game.winner
+    }*/
+    var clickedJump = false;
+    const handleClick = (x, y) => {
+      if(clickedJump) {
+        if(confirm('Are you sure you want to jump?')) {
+          performJump(x, y, allData.userData.user.username, allData.gameData.gameId);
+          return;
+        }
+      }
+      console.log(allData);
+      if ("@" + allData.userData.user.username === allData.gameData.turn) {
+        if (allData.gameData.gameStatus === 'inProgress') {
+          if (allData.gameData.ballPosition.x === x && allData.gameData.ballPosition.y === y) {
+            // jump ball
+            showJumpsPossible();
+          } else {
+            // place token
+            if(confirm('Are you sure you want to place a player?')) placeBlack(x, y, allData.userData.user.username, allData.gameData.gameId);
+          } 
+        } else {
+          alert('Game is over!');
+        }
+      } else {
+        alert('It is not your turn!');
+      }
+    }
+    const showJumpsPossible = () => {
+      if(clickedJump == false) {
+        allData.gameData.possibleJumps.forEach(jump => {
+          drawArrow(allData.gameData.ballPosition.x, allData.gameData.ballPosition.y, jump.ballFinalPosition.x, jump.ballFinalPosition.y);
+        })
+        clickedJump = true;
+      } else {
+        arrows.clear();
+        clickedJump = false;
+      }
+      
+      // highlight possible jumps
+      // on response, refresh page
+      
+    }
+    const allData = JSON.parse(`<%- JSON.stringify({gameData, userData}) %>`);
     SVG.on(document, 'DOMContentLoaded', function() {
+      console.log(allData);
       clearBoard();
-      addBall( <%= gameData.ballPosition.x %>, <%= gameData.ballPosition.y %> );
+      addBall(allData.gameData.ballPosition.x, allData.gameData.ballPosition.y);
+      allData.gameData.blackTokens.forEach(token => {
+        addPlayer(token.x, token.y);
+      });
+      // refresh page when user revisits tab
+      window.onfocus = function() {
+        window.location.reload();
+      }
     });
   </script>
 </html>

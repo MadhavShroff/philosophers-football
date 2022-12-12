@@ -75,6 +75,11 @@ button {
   z-index: 2;
 }
 
+#profile-metadata > div:nth-child(1) > div.metadata > h1 {
+  font-size: 3em;
+  margin: 0 5px;
+}
+
 .game {
   border: 3px solid #000;
   border-radius: 4px;
@@ -94,8 +99,10 @@ button {
 
 figcaption {
   text-align: center;
-  max-width: 140px;
-  font-size: 12px;
+  width: fit-content;
+  min-width: 80px;
+  max-width: 200px;
+  font-size: 15px;
   white-space: nowrap; /* forces text to single line */
   overflow: hidden; /* hides text that doesn't fit */
   text-overflow: ellipsis; /* adds ... to the end of the text */
@@ -103,6 +110,16 @@ figcaption {
 
 .player {
   margin: 0 10px 10px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+a { color: inherit;} 
+
+.player > img {
+  width: 65px;
 }
 
 .players {

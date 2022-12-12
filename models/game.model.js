@@ -17,7 +17,8 @@ const Game = mongoose.model(
         winner: { type: String, required: false },
         turn: { type: String, required: true },
         gameStatus: { type: String, required: true },
-        gameId: { type: Number, required: true }
+        gameId: { type: Number, required: true },
+        possibleJumps: []
     })
 );
 

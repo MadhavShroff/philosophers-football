@@ -7,7 +7,7 @@ module.exports = {
     name: 'pf-server',
     instances: 1,
     maxMemoryRestart: '2G',
-    max_restarts: 20,
+    max_restarts: 20000,
     env: {
       NODE_ENV: 'development',
       SERVER_PORT: 8080,

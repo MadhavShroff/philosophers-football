@@ -1,9 +1,7 @@
-const express = require('express');
-const redis = require('redis');
+const express = require('express'); 
 const session = require('express-session');
 // use mongo store for session storage
 const MongoStore = require('connect-mongo');
-const redisClient = redis.createClient();
 const {serverLogger, logger} = require('../middleware/serverLogger');
 const cookieParser = require('cookie-parser')
 const commitHash = require('child_process').execSync('git rev-parse HEAD').toString().trim().slice(0, 7);
