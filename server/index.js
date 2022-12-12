@@ -44,6 +44,7 @@ server.set("view engine", "ejs");
 
 // if the Node app is behind a proxy (like Nginx, which it is), we will have to set proxy to true.
 server.enable('trust proxy')
+console.log("Session Secret: " + process.env.SESSION_SECRET)
 server.use(session({
     secret: process.env.SESSION_SECRET,
     name: "pfsession",
