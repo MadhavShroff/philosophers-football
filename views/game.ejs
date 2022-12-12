@@ -171,6 +171,7 @@
       if (allData.gameData.ballPosition.x === x && allData.gameData.ballPosition.y === y) {
         // jump ball
         showJumpsPossible();
+        return;
       }
       if ("@" + allData.userData.user.username === allData.gameData.turn) {
         if (allData.gameData.gameStatus === 'inProgress') {
