@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser')
 const commitHash = require('child_process').execSync('git rev-parse HEAD').toString().trim().slice(0, 7);
 require("dotenv").config();
 const csrf = require('csurf');
-const csrfProtection = csrf({cookie: true});
+const csrfProtection = csrf({cookie: true, value: req => req.cookies['XSRF-TOKEN']});
 
 // Create a new Server
 const server = express();
@@ -31,7 +31,7 @@ server.use(function (err, req, res, next) {
     if (err.code !== 'EBADCSRFTOKEN') return next(err)
      // handle CSRF token errors here
     res.status(403)
-    console.log(req.cookies)
+    console.log(req.cookies);
     res.send('session has expired or form tampered with')
 })
 
