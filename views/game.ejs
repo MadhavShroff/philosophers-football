@@ -97,7 +97,7 @@
           <h2> Game Over </h3>
           <h2> Winner: <%= gameData.winner %> </h3>
         <% } else { %>
-          <h3> Turn: <%= gameData.turn %> <%= gameData.player1Username === gameData.turn ? `(Goal: Green)` : `(Goal: Red)` %> </h3>
+          <h3> Turn: <%= gameData.turn %> <%= gameData.player1Username === gameData.turn ? `(Target: Green, Defending: Red)` : `(Target: Red, Defending: Green)` %> </h3>
         <% } %> 
       </div>
       <div id="table"></div>
@@ -168,13 +168,13 @@
         }
       }
       console.log(allData);
+      if (allData.gameData.ballPosition.x === x && allData.gameData.ballPosition.y === y) {
+        // jump ball
+        showJumpsPossible();
+      }
       if ("@" + allData.userData.user.username === allData.gameData.turn) {
         if (allData.gameData.gameStatus === 'inProgress') {
-          if (allData.gameData.ballPosition.x === x && allData.gameData.ballPosition.y === y) {
-            // jump ball
-            showJumpsPossible();
-          } else {
-            // place token
+          if (allData.gameData.ballPosition.x !== x && allData.gameData.ballPosition.y !== y) {
             if(confirm('Are you sure you want to place a player?')) placeBlack(x, y, allData.userData.user.username, allData.gameData.gameId);
           } 
         } else {
@@ -186,6 +186,10 @@
     }
     const showJumpsPossible = () => {
       if(clickedJump == false) {
+        if(allData.gameData.possibleJumps.length === 0) {
+          alert('No jumps possible!');
+          return;
+        }
         allData.gameData.possibleJumps.forEach(jump => {
           drawArrow(allData.gameData.ballPosition.x, allData.gameData.ballPosition.y, jump.ballFinalPosition.x, jump.ballFinalPosition.y);
         })
