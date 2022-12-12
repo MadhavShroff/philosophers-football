@@ -4,7 +4,9 @@ const { logger } = require('../middleware/serverLogger');
 const Counter = require('../models/counter.model');
 const Game = require('../models/game.model');
 const User = require('../models/user.model');
-const { getLegalJumps } = require('../utils/jumps')
+const { getLegalJumps } = require('../utils/jumps');
+const csrf = require('csurf');
+
 
 module.exports = function(app) {
     // add routes to send static files in response to get requests

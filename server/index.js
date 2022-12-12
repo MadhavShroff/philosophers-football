@@ -6,6 +6,8 @@ const {serverLogger, logger} = require('../middleware/serverLogger');
 const cookieParser = require('cookie-parser')
 const commitHash = require('child_process').execSync('git rev-parse HEAD').toString().trim().slice(0, 7);
 require("dotenv").config();
+const csrf = require('csurf');
+const csrfProtection = csrf({cookie: true});
 
 // Create a new Server
 const server = express();
@@ -23,6 +25,21 @@ server.use(function (req, res, next) {
     res.header('Pragma', 'no-cache');
     next()
 });
+server.use(csrfProtection);
+// xsrf error handler
+server.use(function (err, req, res, next) {
+    if (err.code !== 'EBADCSRFTOKEN') return next(err)
+     // handle CSRF token errors here
+    res.status(403)
+    console.log(req.cookies)
+    res.send('session has expired or form tampered with')
+})
+
+server.use(function (req, res, next) {
+  res.cookie('XSRF-TOKEN', req.csrfToken())
+  next()
+})
+
 server.set("view engine", "ejs");
 
 // if the Node app is behind a proxy (like Nginx, which it is), we will have to set proxy to true.
