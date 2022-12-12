@@ -211,6 +211,11 @@
       window.onfocus = function() {
         window.location.reload();
       }
+
+      // refresh periodically
+      setInterval(() => {
+        window.location.reload();
+      }, 10000);
     });
   </script>
 </html>

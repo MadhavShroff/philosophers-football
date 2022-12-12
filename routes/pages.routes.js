@@ -14,7 +14,6 @@ module.exports = function(app) {
         res.render('login', {data: {user: req.session.user, csrfToken: req.session.csrfSecret}});
     });
     app.get('/signup', (req, res) => {
-        logger.info("csrfToken: " + req.session.csrfSecret);
         res.render('signup', {data: {user: req.session.user, csrfToken: req.session.csrfSecret}});
     });
     app.get('/lobby', sessionIsValid, (req, res) => {

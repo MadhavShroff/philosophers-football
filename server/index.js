@@ -46,9 +46,9 @@ server.set("view engine", "ejs");
 server.enable('trust proxy')
 server.use(session({
     secret: [
-        'scpm124pwe9-12112e[kzxoncp1240913(U@eg',
-        'U%7bv6ry5rv%vrU6nu6vrCY5',
-        'I&V$%C#B&oh7y7ho7t8h'
+        process.env.SESSION_SECRET1,
+        process.env.SESSION_SECRET2,
+        process.env.SESSION_SECRET3
     ],
     name: "pfsession",
     proxy: process.env.PF_ENV === "production" ? true : false,
