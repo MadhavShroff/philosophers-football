@@ -1,4 +1,4 @@
-var bcrypt = require("bcryptjs");
+var bcrypt = require("bcrypt");
 const db = require("../models");
 const User = db.user;
 const sanitize = require('mongo-sanitize');
@@ -32,7 +32,7 @@ module.exports = function (app) {
 			email: req.body.email,
 			password: bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(11)),
 			score: 0
-			// bcryptjs hashes the password using a salt and returns the hash
+			// bcrypt hashes the password using a salt and returns the hash
 			// The salt makes it impossible to generate the same hash from the same password
 			// The salted hash is then stored in the database
 		}).save((err, user) => {

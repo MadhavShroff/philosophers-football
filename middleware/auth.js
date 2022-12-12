@@ -1,4 +1,4 @@
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const { logger } = require('../middleware/serverLogger');
 const db = require("../models");
 const csrf = require('csurf');
